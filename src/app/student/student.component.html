@@ -1,0 +1,93 @@
+<div class="container">
+  <h3>Student List</h3>
+  <div class="row">
+    <div class="col-6">
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Id</th>
+            <th>Name</th>
+            <th>Subject 1</th>
+            <th>Subject 2</th>
+            <th>Subject 3</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let s of studList; let i = index">
+            <td>{{ s.id }}</td>
+            <td>{{ s.name }}</td>
+            <td>{{ s.marks1 }}</td>
+            <td>{{ s.marks2 }}</td>
+            <td>{{ s.marks3 }}</td>
+            <td>
+              <button type="button" class="btn btn-info" (click)="editStudent(s)">Edit</button> &nbsp;
+              <button type="button" class="btn btn-danger" (click)="deleteStudent(s.id)">Delete</button>&nbsp;<br><br>
+              <button type="button" class="btn btn-success" (click)="getMarkSheet(s.id)">Generate Marksheet</button>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+      <!-- <div *ngIf="showMarksheet">
+        <h3>Mark sheet</h3>
+        <p>ID: {{mData.id }}</p>
+        <p>Name: {{mData.name }}</p>
+        <p>Marks 1: {{mData.marks1 }}</p>
+        <p>Marks 2: {{mData.marks2 }}</p>
+        <p>Marks 3: {{mData.marks3 }}</p>
+        <p>Total Marks: {{mData.totalMarks }}</p>
+      </div>
+    </div> -->
+    </div>
+    <div class="col-6">
+      <h3>Student</h3>
+      <form [formGroup]="studForm" (ngSubmit)="addStudent()">
+        <div class="form-floating mb-3">
+          <input type="number" class="form-control" formControlName="id" required
+            [class.is-invalid]="Id?.invalid && Id?.touched" name="id" id="id" placeholder="Emp Id">
+          <label for="id">Student Id</label>
+          <div *ngIf="Id?.invalid && Id?.touched">
+            <small class="text-danger" *ngIf="Id?.errors?.['required']">Id is required</small>
+          </div>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" formControlName="name" required
+            [class.is-invalid]="name?.invalid && name?.touched" name="name" id="name" placeholder="Emp Name">
+          <label for="id">Student Name</label>
+          <div *ngIf="name?.invalid && name?.touched">
+            <small class="text-danger" *ngIf="name?.errors?.['required']">Name is required</small>
+          </div>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" formControlName="marks1" required
+            [class.is-invalid]="marks1?.invalid && marks1?.touched" name="name" id="name" placeholder="Emp Name">
+          <label for="id">Mathematics 1</label>
+          <div *ngIf="marks1?.invalid && marks1?.touched">
+            <small class="text-danger" *ngIf="marks1?.errors?.['required']">marks is required</small>
+          </div>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" formControlName="marks2" required
+            [class.is-invalid]="marks2?.invalid && marks2?.touched" name="name" id="name" placeholder="Emp Name">
+          <label for="id">Mathematics 2</label>
+          <div *ngIf="marks2?.invalid && marks2?.touched">
+            <small class="text-danger" *ngIf="marks2?.errors?.['required']">marks is required</small>
+          </div>
+        </div>
+        <div class="form-floating mb-3">
+          <input type="text" class="form-control" formControlName="marks3" required
+            [class.is-invalid]="marks3?.invalid && marks3?.touched" name="name" id="name" placeholder="Emp Name">
+          <label for="id">Mathematics 3</label>
+          <div *ngIf="marks3?.invalid && marks3?.touched">
+            <small class="text-danger" *ngIf="marks3?.errors?.['required']">marks is required</small>
+          </div>
+        </div>
+        <div class="form-floating mb-3">
+          <button type="submit" *ngIf="!isUpdateBtn" class="btn btn-outline-primary">Add</button> &nbsp;
+          <button type="submit" *ngIf="isUpdateBtn" class="btn btn-outline-primary">Update</button> &nbsp;
+          <button type="button" class="btn btn-outline-primary">Cancel</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
