@@ -22,13 +22,12 @@ export class MarkSheetComponent implements OnInit {
 
   id: string | unknown;
 
-  constructor(private route: ActivatedRoute,private router: Router) {}
+  constructor(private route: ActivatedRoute, private router: Router) {}
   studentService: StudentService = inject(StudentService);
-  
 
   ngOnInit(): void {
-    let Id=0;
-    this.route.params.subscribe(params => {
+    let Id = 0;
+    this.route.params.subscribe((params) => {
       Id = +params['id'];
     });
     this.studentDetails = this.studentService.getStudentByRollNo(Id);
@@ -56,5 +55,26 @@ export class MarkSheetComponent implements OnInit {
   }
   goBack() {
     this.router.navigate(['/student']);
+  }
+  generatePdf(): void {
+    const pdfContent = `
+      Roll No: ${this.studentDetails.rollNo}
+      Name: ${this.studentDetails.name}
+      Subject 1: ${this.studentDetails.mark1}
+      Subject 2: ${this.studentDetails.mark2}
+      Subject 3: ${this.studentDetails.mark3}
+      Percentage: ${this.calculatePercentage(
+        this.studentDetails.mark1,
+        this.studentDetails.mark2,
+        this.studentDetails.mark3
+      )}%
+      Grade: ${this.calculateGrade(
+        this.studentDetails.mark1,
+        this.studentDetails.mark2,
+        this.studentDetails.mark3
+      )}
+    `;
+
+    this.pdfGeneratorService.generatePdf(pdfContent);
   }
 }
