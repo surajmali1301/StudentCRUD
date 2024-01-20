@@ -1,9 +1,17 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit, inject } from '@angular/core';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterModule, RouterOutlet } from '@angular/router';
+import {
+  ActivatedRoute,
+  Router,
+  RouterModule,
+  RouterOutlet,
+} from '@angular/router';
 import { StudentService } from '../student/student.service';
-
+import { CommonModule } from '@angular/common';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import pdfMake from 'pdfmake/build/pdfmake';
+import pdfFonts from 'pdfmake/build/vfs_fonts';
+import { saveAs } from 'file-saver';
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 @Component({
   selector: 'app-mark-sheet',
   standalone: true,
@@ -15,14 +23,13 @@ import { StudentService } from '../student/student.service';
     RouterModule,
   ],
   templateUrl: './mark-sheet.component.html',
-  styleUrl: './mark-sheet.component.css',
+  styleUrls: ['./mark-sheet.component.css'],
 })
 export class MarkSheetComponent implements OnInit {
   studentDetails: any;
 
-  id: string | unknown;
-
   constructor(private route: ActivatedRoute, private router: Router) {}
+
   studentService: StudentService = inject(StudentService);
 
   ngOnInit(): void {
@@ -32,6 +39,7 @@ export class MarkSheetComponent implements OnInit {
     });
     this.studentDetails = this.studentService.getStudentByRollNo(Id);
   }
+
   calculatePercentage(mark1: number, mark2: number, mark3: number): string {
     const totalMarks = mark1 + mark2 + mark3;
     const percentage = (totalMarks / 300) * 100;
@@ -53,28 +61,65 @@ export class MarkSheetComponent implements OnInit {
       return 'F';
     }
   }
+  generatePdf() {
+    const docDefinition: any = {
+      content: [
+        {
+          text: 'Mark-Sheet',
+          style: 'header',
+        },
+        {
+          table: {
+            widths: ['*', '*', '*', '*', '*', '*', '*'],
+            body: [
+              [
+                { text: 'Name', style: 'tableHeader' },
+                { text: 'Roll No', style: 'tableHeader' },
+                { text: 'Subject 1', style: 'tableHeader' },
+                { text: 'Subject 2', style: 'tableHeader' },
+                { text: 'Subject 3', style: 'tableHeader' },
+                { text: 'Percentage', style: 'tableHeader' },
+                { text: 'Grade', style: 'tableHeader' },
+              ],
+              [
+                this.studentDetails?.name || '',
+                +
+                this.studentDetails?.id || '',
+                this.studentDetails?.marks1 || '',
+                this.studentDetails?.marks2 || '',
+                this.studentDetails?.marks3 || '',
+                this.calculatePercentage(
+                  this.studentDetails?.marks1,
+                  this.studentDetails?.marks2,
+                  this.studentDetails?.marks3
+                ) + '%',
+                this.calculateGrade(
+                  this.studentDetails?.marks1,
+                  this.studentDetails?.marks2,
+                  this.studentDetails?.marks3
+                ),
+              ],
+            ],
+          },
+        },
+      ],
+      styles: {
+        header: {
+          fontSize: 18,
+          bold: true,
+          margin: [0, 0, 0, 10],
+        },
+        tableHeader: {
+          bold: true,
+          fontSize: 12,
+          color: 'black',
+        },
+      },
+    };
+
+    pdfMake.createPdf(docDefinition).download('mark-sheet.pdf');
+  }
   goBack() {
     this.router.navigate(['/student']);
-  }
-  generatePdf(): void {
-    const pdfContent = `
-      Roll No: ${this.studentDetails.rollNo}
-      Name: ${this.studentDetails.name}
-      Subject 1: ${this.studentDetails.mark1}
-      Subject 2: ${this.studentDetails.mark2}
-      Subject 3: ${this.studentDetails.mark3}
-      Percentage: ${this.calculatePercentage(
-        this.studentDetails.mark1,
-        this.studentDetails.mark2,
-        this.studentDetails.mark3
-      )}%
-      Grade: ${this.calculateGrade(
-        this.studentDetails.mark1,
-        this.studentDetails.mark2,
-        this.studentDetails.mark3
-      )}
-    `;
-
-    this.pdfGeneratorService.generatePdf(pdfContent);
   }
 }

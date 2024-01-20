@@ -1,37 +1,56 @@
 <div class="container">
-  <h3>Mark Sheet</h3>
+  <div class="row mt-4">
+    <div class="col-12 text-center">
+      <h3>Mark Sheet</h3>
+    </div>
+  </div>
 
-  <table class="table table-bordered">
-    <tbody>
-      <tr>
-        <th>Roll No:</th>
-        <td>{{ studentDetails?.rollNo }}</td>
-      </tr>
-      <tr>
-        <th>Name:</th>
-        <td>{{ studentDetails?.name }}</td>
-      </tr>
-      <tr>
-        <th>Mathematics 1</th>
-        <td>{{ studentDetails?.marks1 }}</td>
-      </tr>
-      <tr>
-        <th>Mathematics 2</th>
-        <td>{{ studentDetails?.marks2 }}</td>
-      </tr>
-      <tr>
-        <th>Mathematics 3</th>
-        <td>{{ studentDetails?.marks3 }}</td>
-      </tr>
-      <tr>
-        <th>Percentage :</th>
-        <td>{{ calculatePercentage(studentDetails?.marks1, studentDetails?.marks2, studentDetails?.marks3) }}%</td>
-      </tr>
-      <tr>
-        <th>Grade:</th>
-        <td>{{ calculateGrade(studentDetails?.marks1, studentDetails?.marks2, studentDetails?.marks3) }}</td>
-      </tr>
-    </tbody>
-  </table>
-  <button type="button" class="btn btn-primary" (click)="goBack()">Back</button>
+  <div class="row mt-3">
+    <div class="col-12">
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th scope="row">Roll No:</th>
+            <td>{{ studentDetails?.id }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Name:</th>
+            <td>{{ studentDetails?.name }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Mathematics 1:</th>
+            <td>{{ studentDetails?.marks1 }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Mathematics 2:</th>
+            <td>{{ studentDetails?.marks2 }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Mathematics 3:</th>
+            <td>{{ studentDetails?.marks3 }}</td>
+          </tr>
+          <tr>
+            <th scope="row">Percentage :</th>
+            <td>{{ calculatePercentage(studentDetails?.marks1, studentDetails?.marks2, studentDetails?.marks3) }}%</td>
+          </tr>
+          <tr>
+            <th scope="row">Grade:</th>
+            <td>{{ calculateGrade(studentDetails?.marks1, studentDetails?.marks2, studentDetails?.marks3) }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <button type="button" class="btn btn-primary" (click)="goBack()">Back</button>
+    </div>
+  </div>
+
+  <div class="row mt-3">
+    <div class="col-12 text-center">
+      <button class="btn btn-primary" (click)="generatePdf()">Download PDF</button>
+    </div>
+  </div>
 </div>
